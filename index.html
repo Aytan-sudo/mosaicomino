@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="galerie" data-contours="oui">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mosaïcomino</title>
+<meta name="description" content="Composez une silhouette avec des tesselles géométriques aux côtés droits ou incurvés. Un puzzle de formes libres, sans grille.">
+<meta name="theme-color" content="#d7a75d" id="couleur-barre">
+<meta name="color-scheme" content="dark light">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="stylesheet" href="css/themes.css">
+<link rel="stylesheet" href="css/style.css">
+<script>
+    try {
+        const enveloppe = JSON.parse(localStorage.getItem('mosaicomino.preferences') || '{}');
+        const prefs = enveloppe && enveloppe.schema === 1 ? enveloppe.donnees || {} : {};
+        if (/^(galerie|lagon|argile|encre|ivoire|verger)$/.test(prefs.theme || '')) document.documentElement.dataset.theme = prefs.theme;
+        if (typeof prefs.contours === 'boolean') document.documentElement.dataset.contours = prefs.contours ? 'oui' : 'non';
+    } catch { /* l'ambiance Galerie reste disponible */ }
+</script>
+</head>
+<body>
+
+<div class="app">
+    <header class="topbar">
+        <div class="identite">
+            <span class="monogramme" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div><p>Jeu de composition</p><h1>Mosaïcomino</h1></div>
+        </div>
+        <nav class="icones" aria-label="Menu">
+            <button type="button" id="bouton-aide" aria-label="Règles">?</button>
+            <button type="button" id="bouton-theme" aria-label="Changer d’ambiance">◒</button>
+            <button type="button" id="bouton-stats" aria-label="Résultats">▤</button>
+            <button type="button" id="bouton-options" aria-label="Options">···</button>
+        </nav>
+    </header>
+
+    <section class="ligne-hud" aria-label="État de la composition">
+        <div><span>Étude</span><strong id="hud-niveau">Pièce du jour</strong></div>
+        <div><span>Posées</span><strong id="hud-progression">0/8</strong></div>
+        <div><span>Gestes</span><strong id="hud-gestes">0</strong></div>
+        <div><span>Temps</span><strong id="hud-temps">0:00</strong></div>
+    </section>
+
+    <main>
+        <section class="composition" aria-labelledby="titre-composition">
+            <div class="section-entete">
+                <div><p class="legende">La forme silencieuse</p><h2 id="titre-composition">Composez sans laisser de vide</h2></div>
+                <span class="etat-discret" id="mention-indices">sans indice</span>
+            </div>
+            <div class="cadre-plateau" id="cadre-plateau">
+                <canvas id="plateau" width="1000" height="1000" tabindex="0" role="application" aria-label="Silhouette à composer"></canvas>
+                <span class="reflet" aria-hidden="true"></span>
+            </div>
+            <p class="annonce" id="annonce" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="collection" aria-labelledby="titre-collection">
+            <div class="section-entete collection-entete">
+                <div><p class="legende">Collection ouverte</p><h2 id="titre-collection">Choisissez une tesselle</h2></div>
+                <span class="etat-discret">rotation <b id="mention-angle">15°</b></span>
+            </div>
+
+            <div class="outils" role="group" aria-label="Transformer la tesselle sélectionnée">
+                <button type="button" id="rotation-gauche" aria-label="Tourner à gauche"><span>↶</span><small>Gauche</small></button>
+                <button type="button" id="rotation-droite" aria-label="Tourner à droite"><span>↷</span><small>Droite</small></button>
+                <button type="button" id="retourner" aria-label="Retourner comme dans un miroir" hidden><span>⇋</span><small>Miroir</small></button>
+                <button type="button" id="ranger" aria-label="Remettre dans la collection"><span>⌄</span><small>Retirer</small></button>
+            </div>
+
+            <div class="reserve" id="reserve" aria-label="Tesselles disponibles"></div>
+
+            <div class="actions">
+                <button type="button" id="bouton-annuler"><span>↶</span> Annuler</button>
+                <button type="button" id="bouton-indice"><span>✦</span> Révéler</button>
+                <button type="button" id="bouton-partager"><span>↑</span> Partager</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="navigation-parties">
+        <button type="button" class="jour" id="bouton-jour"><span>Œuvre commune</span><strong>Pièce du jour</strong></button>
+        <button type="button" class="nouvelle" id="bouton-nouveau"><span>Composition libre</span><strong>Nouvelle étude</strong></button>
+    </footer>
+</div>
+
+<div class="confettis" id="confettis" aria-hidden="true"></div>
+
+<dialog id="dialogue-fin" class="dialog fin">
+    <span class="sceau" aria-hidden="true">M</span>
+    <p class="legende">Composition achevée</p>
+    <h2>L’équilibre est trouvé.</h2>
+    <p class="introduction">Chaque courbe, chaque angle et chaque vide apparent a rejoint sa place.</p>
+    <dl class="resultat">
+        <div><dt>Temps</dt><dd id="fin-temps">0:00</dd></div>
+        <div><dt>Gestes</dt><dd id="fin-gestes">0</dd></div>
+        <div><dt>Indices</dt><dd id="fin-indices">Aucun</dd></div>
+    </dl>
+    <p class="parfait" id="fin-parfait">✦ Composition intuitive, sans indice</p>
+    <div class="dialog-actions"><button type="button" class="secondaire" id="fin-partager">Partager</button><button type="button" class="primaire" id="fin-rejouer">Nouvelle étude</button></div>
+    <button type="button" class="revoir" data-fermer>Revoir la composition</button>
+</dialog>
+
+<dialog id="dialogue-options" class="dialog grande">
+    <div class="dialog-entete"><div><p class="legende">Le commissariat</p><h2>Options</h2></div><button type="button" class="fermer" data-fermer aria-label="Fermer">×</button></div>
+    <h3>Étude libre</h3>
+    <div class="choix-niveau" id="choix-niveau" role="group" aria-label="Difficulté"></div>
+    <h3>Ambiance de la galerie</h3>
+    <div class="choix-theme" id="choix-theme" role="group" aria-label="Ambiance colorée"></div>
+    <h3>Sensations</h3>
+    <label class="option"><input type="checkbox" id="option-contours"><span><strong>Grain des tesselles</strong><small>Ajoute une trame discrète en plus de la couleur.</small></span></label>
+    <label class="option"><input type="checkbox" id="option-sons"><span><strong>Sons feutrés</strong><small>Des notes courtes accompagnent la composition.</small></span></label>
+    <label class="option"><input type="checkbox" id="option-vibration"><span><strong>Toucher haptique</strong><small>Une vibration confirme ou refuse la pose.</small></span></label>
+    <p class="version" id="version">Mosaïcomino 1.0.0</p>
+    <div class="dialog-actions"><button type="button" class="secondaire" data-fermer>Fermer</button><button type="button" class="primaire" id="options-jouer">Créer cette étude</button></div>
+</dialog>
+
+<dialog id="dialogue-stats" class="dialog grande">
+    <div class="dialog-entete"><div><p class="legende">Catalogue personnel</p><h2>Résultats</h2></div><button type="button" class="fermer" data-fermer aria-label="Fermer">×</button></div>
+    <div class="series"><div><span>Série actuelle</span><strong id="stat-serie">0</strong><small>jours</small></div><div><span>Meilleure série</span><strong id="stat-record-serie">0</strong><small>jours</small></div></div>
+    <h3>Par collection</h3>
+    <dl class="stats-niveaux" id="stats-niveaux"></dl>
+    <h3>Dernières œuvres</h3>
+    <p class="introduction" id="historique-vide">Aucune composition achevée.</p>
+    <ol class="historique" id="historique"></ol>
+    <div class="dialog-actions"><button type="button" class="danger" id="effacer-stats">Effacer le catalogue</button><button type="button" class="primaire" data-fermer>Fermer</button></div>
+</dialog>
+
+<dialog id="dialogue-aide" class="dialog grande">
+    <div class="dialog-entete"><div><p class="legende">Notice de l’œuvre</p><h2>Composer</h2></div><button type="button" class="fermer" data-fermer aria-label="Fermer">×</button></div>
+    <p class="introduction">Toutes les tesselles ont été découpées dans la silhouette. Replacez-les sans les redimensionner : aucun chevauchement, aucun dépassement, aucun vide.</p>
+    <div class="regles">
+        <article><span>01</span><div><strong>Déplacer</strong><p>Glissez une forme depuis la collection. Un raccord proche s’aimante délicatement.</p></div></article>
+        <article><span>02</span><div><strong>Orienter</strong><p>Tournez par petits angles. Le miroir n’apparaît que dans la collection Virtuose.</p></div></article>
+        <article><span>03</span><div><strong>Observer</strong><p>Les courbes peuvent créer de faux raccords. Le jeu ne révèle jamais les bonnes pièces.</p></div></article>
+    </div>
+    <h3>Au clavier</h3>
+    <p><kbd>Tab</kbd> puis <kbd>Entrée</kbd> sélectionne une tesselle et rejoint la composition. Déplacez le curseur avec les flèches, validez avec <kbd>Entrée</kbd>. <kbd>R</kbd> tourne, <kbd>F</kbd> retourne et <kbd>U</kbd> annule.</p>
+    <div class="dialog-actions"><button type="button" class="primaire" data-fermer>Commencer</button></div>
+</dialog>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
+
