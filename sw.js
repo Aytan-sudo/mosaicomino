@@ -1,4 +1,4 @@
-const VERSION = 'mosaicomino-1.0.0';
+const VERSION = 'mosaicomino-1.1.0';
 const COQUILLE = [
     './',
     'index.html',
@@ -16,6 +16,7 @@ const COQUILLE = [
     'js/son.js',
     'js/stockage.js',
     'js/themes.js',
+    'assets/icon.svg',
     'assets/icon-180.png',
     'assets/icon-192.png',
     'assets/icon-512.png'

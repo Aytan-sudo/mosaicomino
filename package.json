@@ -1,11 +1,11 @@
 {
   "name": "mosaicomino",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Puzzle de pavage par formes libres, droites et incurvées, sans grille.",
   "type": "module",
   "scripts": {
-    "test": "node tests/test-geometrie.mjs && node tests/test-generateur.mjs && node tests/test-partie.mjs && node tests/test-stockage.mjs && node tests/test-page.mjs",
+    "test": "node tests/test-geometrie.mjs && node tests/test-generateur.mjs && node tests/test-partie.mjs && node tests/test-son.mjs && node tests/test-stockage.mjs && node tests/test-page.mjs",
     "check": "node --check js/app.js && node --check js/config.js && node --check js/generateur.js && node --check js/geometrie.js && node --check js/hasard.js && node --check js/partage.js && node --check js/partie.js && node --check js/rendu.js && node --check js/son.js && node --check js/stockage.js && node --check js/themes.js",
     "serve": "python3 -m http.server 8766"
   }

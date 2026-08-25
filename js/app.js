@@ -11,7 +11,7 @@ import {
     annoncer, celebrer, coordonneesPlateau, formaterTemps, mettreAJourHud,
     rendrePlateau, rendreReserve, rendreStatistiques
 } from './rendu.js';
-import { sonPose, sonRefus, sonRotation, sonVictoire } from './son.js';
+import { preparerSon, sonPose, sonRefus, sonRotation, sonVictoire, surveillerVisibilite } from './son.js';
 import {
     chargerPreferences, chargerSession, chargerStatistiques, effacerStatistiques,
     enregistrerPreferences, enregistrerSession, enregistrerVictoire
@@ -535,6 +535,8 @@ function installerEvenements() {
 appliquerPreferences();
 remplirOptions();
 installerEvenements();
+preparerSon(document, () => preferences.sons);
+surveillerVisibilite(document);
 initialiserPartie();
 $('version').textContent = `Mosaïcomino ${VERSION}`;
 

@@ -10,6 +10,27 @@ Ce n’est pas une variante graphique de Polyominos. Il n’y a ni grille ni cas
 les positions, les rotations, les courbes, les collisions et l’aire sont toutes
 calculées dans un plan continu.
 
+## Version 1.1
+
+- **le bouton Miroir ne restait plus affiché là où il ne sert à rien.** Le rendu
+  le cachait bien par l'attribut `hidden`, mais `.outils button { display: flex }`
+  l'emportait sur le `display: none` que le navigateur y attache : le bouton
+  restait donc visible sur Épure, Mosaïque et la pièce du jour, où retourner une
+  tesselle n'est pas permis — visible et inerte. Un rappel `[hidden] { display:
+  none !important; }` remet les choses en place, et un test structurel interdit
+  désormais à toute règle d'auteur de réafficher un élément caché ;
+- le son de refus remonte de 135 Hz à une chute de 400 vers 310 Hz. Un
+  haut-parleur de téléphone ne restitue à peu près rien sous 300 Hz : le refus
+  disait non par une profondeur qui n'arrivait jamais à l'oreille, il le dit
+  maintenant par le mouvement. `tests/test-son.mjs` joue les quatre timbres
+  contre un contexte audio factice et garde le plancher ;
+- le contexte audio se prépare dès le premier geste et se suspend quand l'onglet
+  passe à l'arrière-plan ;
+- `user-scalable=no` et `touch-action: manipulation` sur les boutons : plus de
+  zoom accidentel au double-tap pendant une rafale de rotations ;
+- `assets/icon.svg` sert de favicon, rejoint le manifeste et la coquille hors
+  ligne.
+
 ## Version 1.0
 
 - déplacement libre au doigt ou à la souris sur un canvas haute définition ;

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Mosaïcomino">
+    <!-- Quatre tesselles découpées dans une même silhouette : les bords intérieurs
+         sont les mêmes courbes parcourues en sens inverse, donc le pavage est exact.
+         Couleurs prises dans l'ambiance Galerie : les tesselles 1, 5, 8 et 3. -->
+    <defs>
+        <linearGradient id="fond" x1="0" y1="0" x2="0" y2="1">
+            <stop stop-color="#1c2029"/>
+            <stop offset="1" stop-color="#11141b"/>
+        </linearGradient>
+        <linearGradient id="relief" x1="0" y1="0" x2="1" y2="1">
+            <stop stop-color="#ffffff" stop-opacity=".26"/>
+            <stop offset=".38" stop-color="#ffffff" stop-opacity="0"/>
+            <stop offset="1" stop-color="#000000" stop-opacity=".22"/>
+        </linearGradient>
+        <filter id="ombre" x="-25%" y="-25%" width="150%" height="150%">
+            <feDropShadow dx="0" dy="14" stdDeviation="13" flood-color="#03070f" flood-opacity=".45"/>
+        </filter>
+        <path id="silhouette" d="M256 128
+            C288 96 352 92 392 124 C430 158 434 242 400 296
+            C392 328 372 352 348 370 C306 400 236 396 176 372
+            C132 356 94 316 88 252 C82 190 110 112 166 100
+            C214 90 240 102 256 128 Z"/>
+    </defs>
+
+    <rect width="512" height="512" rx="108" fill="url(#fond)"/>
+
+    <g filter="url(#ombre)">
+        <use href="#silhouette" fill="#2a303a"/>
+    </g>
+
+    <g stroke="rgba(255,255,255,.5)" stroke-width="5" stroke-linejoin="round">
+        <!-- Ambre : lobe haut-gauche -->
+        <path fill="#e6a84f" d="M256 128
+            C250 160 244 200 236 240 C190 258 132 272 88 252
+            C82 190 110 112 166 100 C214 90 240 102 256 128 Z"/>
+        <!-- Turquoise : lobe haut-droit et tout le flanc -->
+        <path fill="#4ba1b4" d="M256 128
+            C288 96 352 92 392 124 C430 158 434 242 400 296
+            C362 288 322 276 288 264 C272 255 254 246 236 240
+            C244 200 250 160 256 128 Z"/>
+        <!-- Magenta : la grande pièce du bas -->
+        <path fill="#bd6f9c" d="M88 252
+            C132 272 190 258 236 240 C254 246 272 255 288 264
+            C300 300 322 340 348 370 C306 400 236 396 176 372
+            C132 356 94 316 88 252 Z"/>
+        <!-- Vert : le coin qui reste -->
+        <path fill="#79aa68" d="M288 264
+            C322 276 362 288 400 296 C392 328 372 352 348 370
+            C322 340 300 300 288 264 Z"/>
+    </g>
+
+    <use href="#silhouette" fill="url(#relief)"/>
+    <use href="#silhouette" fill="none" stroke="#555d69" stroke-width="7"/>
+
+    <!-- Le reflet de vitrine, comme sur le plateau. -->
+    <path d="M132 194 C148 146 186 118 232 114" fill="none" stroke="#ffffff"
+          stroke-opacity=".55" stroke-width="11" stroke-linecap="round"/>
+</svg>

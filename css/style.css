@@ -1,4 +1,10 @@
 * { box-sizing: border-box; }
+
+/* Une règle d'auteur, même peu spécifique, l'emporte sur le `display: none` que
+   le navigateur attache à [hidden] : `.outils button { display: flex }` suffit
+   à rendre visible un bouton que le rendu croit avoir caché. C'est ce qui a
+   laissé le bouton Miroir sur les niveaux sans miroir, affiché et inerte. */
+[hidden] { display: none !important; }
 html { min-height: 100%; background: var(--fond); }
 body {
     min-width: 310px;
@@ -13,7 +19,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 button, input { font: inherit; }
-button { -webkit-tap-highlight-color: transparent; }
+button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 button:focus-visible, input:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 72%, transparent); outline-offset: 3px; }
 
 .app {

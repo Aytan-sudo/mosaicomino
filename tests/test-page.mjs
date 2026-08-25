@@ -41,10 +41,25 @@ check('tous les éléments cherchés par l’application existent', ids.every(id
 check('la page utilise un canvas accessible et une application modulaire', page.includes('<canvas id="plateau"') && page.includes('<script type="module" src="js/app.js">'));
 check('les trois niveaux alimentent le sélecteur dynamique', Object.keys(NIVEAUX).length === 3 && page.includes('id="choix-niveau"') && app.includes('Object.values(NIVEAUX)'));
 check('les six ambiances ont une palette', THEMES.length === 6 && THEMES.slice(1).every(theme => styles.includes(`[data-theme="${theme.id}"]`)));
+// Cacher, c'est une règle CSS qui se laisse écraser. `.outils button { display:
+// flex }` a suffi à laisser le bouton Miroir visible sur les niveaux sans
+// miroir, où il ne répond à rien : le rendu le croyait caché, le navigateur
+// non. Le rappel `!important` est donc une pièce du moteur, pas du décor.
+const caches = [...`${app}\n${rendu}`.matchAll(/\$\('([\w-]+)'\)\.hidden\s*=/g)].map(([, id]) => id);
+check('le code cache bien des éléments par l’attribut hidden', caches.length > 0, String(caches.length));
+check('aucune règle d’auteur ne peut réafficher un élément caché',
+    /\[hidden\]\s*\{[^}]*display:\s*none\s*!important/.test(styles));
+check('le viewport verrouille le zoom tactile', page.includes('user-scalable=no'));
+check('les boutons ne répondent pas au double-tap', styles.includes('touch-action: manipulation'));
 check('le plateau capte les gestes directs', styles.includes('#plateau') && styles.includes('touch-action: none'));
 check('mobile, paysage et mouvement réduit sont traités', styles.includes('safe-area-inset-top') && styles.includes('@media (orientation: landscape)') && styles.includes('prefers-reduced-motion'));
-check('le manifeste est complet', manifeste.name === 'Mosaïcomino' && manifeste.orientation === 'any' && manifeste.icons.length === 3 && manifeste.icons.every(icone => existsSync(join(racine, icone.src))));
+check('le manifeste est complet', manifeste.name === 'Mosaïcomino' && manifeste.orientation === 'any' && manifeste.icons.length === 4 && manifeste.icons.every(icone => existsSync(join(racine, icone.src))));
 check('le service worker est enregistré', app.includes("navigator.serviceWorker.register('./sw.js')"));
+// Une suite que `npm test` n'appelle pas ne protège rien, et rien ne le
+// signale : le fichier dort dans le dossier, vert par absence.
+const suites = readdirSync(join(racine, 'tests')).filter(nom => nom.startsWith('test-'));
+const oubliees = suites.filter(nom => !paquet.scripts.test.includes(`tests/${nom}`));
+check('npm test lance chaque suite', oubliees.length === 0, oubliees.join(' '));
 check('le déploiement attend les tests', lire('.github/workflows/pages.yml').includes('needs: tester'));
 
 rapport();
