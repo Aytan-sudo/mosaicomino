@@ -10,6 +10,11 @@ Ce n’est pas une variante graphique de Polyominos. Il n’y a ni grille ni cas
 les positions, les rotations, les courbes, les collisions et l’aire sont toutes
 calculées dans un plan continu.
 
+## Version 1.1.1
+
+- les cibles tactiles de l'interface passent à 44 px (boutons d'en-tête,
+  boutons texte, listes déroulantes), conformément à la convention.
+
 ## Version 1.1
 
 - **le bouton Miroir ne restait plus affiché là où il ne sert à rien.** Le rendu

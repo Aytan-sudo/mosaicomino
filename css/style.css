@@ -43,9 +43,9 @@ button:focus-visible, input:focus-visible { outline: 3px solid color-mix(in srgb
 .icones button, .fermer {
     display: grid;
     place-items: center;
-    width: 41px;
-    height: 41px;
-    min-width: 41px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
     padding: 0;
     border: 1px solid var(--trait);
     border-radius: 50%;
@@ -237,7 +237,7 @@ kbd { padding: 2px 6px; border: 1px solid var(--trait); border-bottom-width: 2px
     .app { padding-inline: 8px; }
     .identite p { display: none; }
     .icones { gap: 3px; }
-    .icones button { width: 37px; height: 37px; min-width: 37px; }
+    .icones button { width: 44px; height: 44px; min-width: 44px; }
     .monogramme { transform: scale(.86); transform-origin: left center; margin-right: -5px; }
     .ligne-hud div { padding-inline: 4px; }
     .outils button small { display: none; }
