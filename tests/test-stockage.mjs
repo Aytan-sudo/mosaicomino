@@ -23,5 +23,16 @@ check('deux jours consécutifs forment une série', stats.quotidien.serie === 2)
 check('le meilleur résultat remplace le précédent', stats.niveaux.mosaique.meilleurTempsMs === 80000 && stats.niveaux.mosaique.meilleursGestes === 27);
 check('les compositions sans indice sont comptées', stats.niveaux.mosaique.sansIndice === 1);
 
-rapport();
+// Le compteur de poses du tampon Logique : il vit dans l'espace du joueur,
+// repart à zéro chaque jour, et ne tourne pas en mode invité.
+const coffrePasseport = new Map();
+const espacePasseport = { getItem: cle => coffrePasseport.get(cle) ?? null, setItem: (cle, valeur) => coffrePasseport.set(cle, String(valeur)) };
+check('passeport : en mode invité, rien n’est compté', stockage.compterPosePasseport('2026-09-15') === null);
+for (let i = 0; i < 19; i++) stockage.compterPosePasseport('2026-09-15', espacePasseport);
+check('passeport : la vingtième tesselle posée du jour atteint vingt', stockage.compterPosePasseport('2026-09-15', espacePasseport) === 20);
+check('passeport : le lendemain, on repart de un', stockage.compterPosePasseport('2026-09-16', espacePasseport) === 1);
+coffrePasseport.set('mosaicomino.passeport', '{cassé');
+check('passeport : un compteur illisible repart proprement', stockage.compterPosePasseport('2026-09-16', espacePasseport) === 1);
+check('passeport : le compteur ne touche pas au stockage du mode invité', localStorage.getItem('mosaicomino.passeport') === null);
 
+rapport();

@@ -1,7 +1,10 @@
-const VERSION = 'mosaicomino-1.1.1';
+const VERSION = 'mosaicomino-1.2.0';
 const COQUILLE = [
     './',
     'index.html',
+    'commun/passeport.js',
+    'commun/liaison.js',
+    'commun/passeport.css',
     'manifest.webmanifest',
     'css/style.css',
     'css/themes.css',

@@ -3,6 +3,10 @@ const SCHEMA = 1;
 const memoire = new Map();
 let coffre;
 
+// Ouvert depuis le hub avec un passeport, le jeu range tout dans l'espace du
+// joueur ; en mode invité, dans localStorage, comme avant.
+const passeport = globalThis.Passeport?.stockageJeu('mosaicomino') ?? null;
+
 export const PREFERENCES_PAR_DEFAUT = {
     niveau: 'mosaique',
     theme: 'galerie',
@@ -12,6 +16,7 @@ export const PREFERENCES_PAR_DEFAUT = {
 };
 
 function obtenirCoffre() {
+    if (passeport) return passeport;
     if (coffre) return coffre;
     try {
         const sonde = `${PREFIXE}sonde`;
@@ -72,6 +77,18 @@ export function enregistrerVictoire({ niveau, quotidien, dateJour, tempsMs, gest
     stats.historique = stats.historique.slice(0, 12);
     ecrire('statistiques', stats);
     return stats;
+}
+
+// Le tampon Logique du hub récompense une grille complétée, ou l'effort :
+// vingt tesselles posées dans la journée, sur une ou plusieurs grilles. Renvoie
+// le compte du jour, ou null en mode invité, où rien ne compte.
+export function compterPosePasseport(jour, espace = passeport) {
+    if (!espace) return null;
+    let compte = null;
+    try { compte = JSON.parse(espace.getItem(PREFIXE + 'passeport')); } catch { /* compteur illisible : on repart */ }
+    const poses = compte?.jour === jour && Number.isInteger(compte.poses) ? compte.poses + 1 : 1;
+    try { espace.setItem(PREFIXE + 'passeport', JSON.stringify({ jour, poses })); } catch { /* le passeport signale l'échec */ }
+    return poses;
 }
 
 export function effacerStatistiques() { ecrire('statistiques', { niveaux: {}, quotidien: {}, historique: [] }); }

@@ -34,6 +34,12 @@ button:focus-visible, input:focus-visible { outline: 3px solid color-mix(in srgb
 .identite { display: flex; align-items: center; gap: 11px; min-width: 0; }
 .identite p, .legende { margin: 0 0 4px; color: var(--accent-fort); font-size: .64rem; font-weight: 760; letter-spacing: .16em; text-transform: uppercase; }
 .identite h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.42rem, 6vw, 2.15rem); font-weight: 540; line-height: .95; letter-spacing: -.045em; }
+/* Le titre se regle sur la place que lui laissent les quatre boutons, qui
+   gardent leurs 44 px : sans cela, « Mosaïcomino » passait sous les boutons,
+   de 29 px sur iPhone 15 et de 77 px sur iPhone SE. Le mot mesure 6,5 em ; un
+   navigateur sans requetes de conteneur garde la taille precedente. */
+.identite { flex: 1 1 0; container-type: inline-size; --place-logo: 54px; }
+.identite h1 { font-size: min(clamp(1.42rem, 6vw, 2.15rem), calc((100cqw - var(--place-logo)) / 6.6)); }
 .monogramme { position: relative; display: block; flex: 0 0 43px; width: 43px; height: 43px; }
 .monogramme i { position: absolute; display: block; background: var(--accent); box-shadow: inset 0 1px rgba(255,255,255,.35), 0 5px 12px var(--ombre); }
 .monogramme i:nth-child(1) { left: 1px; top: 8px; width: 24px; height: 28px; border-radius: 55% 35% 48% 30%; transform: rotate(-18deg); }
@@ -265,6 +271,13 @@ kbd { padding: 2px 6px; border: 1px solid var(--trait); border-bottom-width: 2px
     .cadre-plateau { width: min(72vh, 440px); padding: 7px; }
     .reserve { min-height: 105px; max-height: 24vh; }
     .navigation-parties { grid-column: 2; grid-row: 4; width: 100%; margin: 0; }
+}
+
+/* Telephone en portrait : le monogramme cede sa place au titre, trop long pour
+   tenir a cote de lui et des quatre boutons. */
+@media (max-width: 440px) {
+    .monogramme { display: none; }
+    .identite { --place-logo: 0px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

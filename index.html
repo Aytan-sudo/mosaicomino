@@ -12,9 +12,12 @@
 <link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="stylesheet" href="css/themes.css">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="commun/passeport.css">
+<script src="commun/passeport.js"></script>
+<script src="commun/liaison.js" defer></script>
 <script>
     try {
-        const enveloppe = JSON.parse(localStorage.getItem('mosaicomino.preferences') || '{}');
+        const enveloppe = JSON.parse((Passeport.stockageJeu('mosaicomino') || localStorage).getItem('mosaicomino.preferences') || '{}');
         const prefs = enveloppe && enveloppe.schema === 1 ? enveloppe.donnees || {} : {};
         if (/^(galerie|lagon|argile|encre|ivoire|verger)$/.test(prefs.theme || '')) document.documentElement.dataset.theme = prefs.theme;
         if (typeof prefs.contours === 'boolean') document.documentElement.dataset.contours = prefs.contours ? 'oui' : 'non';
@@ -24,6 +27,7 @@
 <body>
 
 <div class="app">
+    <div class="passeport-ruban" data-passeport-ruban data-jeu="mosaicomino" data-consigne="Tampon : une grille complétée ou 20 tesselles"></div>
     <header class="topbar">
         <div class="identite">
             <span class="monogramme" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -113,7 +117,7 @@
     <label class="option"><input type="checkbox" id="option-contours"><span><strong>Grain des tesselles</strong><small>Ajoute une trame discrète en plus de la couleur.</small></span></label>
     <label class="option"><input type="checkbox" id="option-sons"><span><strong>Sons feutrés</strong><small>Des notes courtes accompagnent la composition.</small></span></label>
     <label class="option"><input type="checkbox" id="option-vibration"><span><strong>Toucher haptique</strong><small>Une vibration confirme ou refuse la pose.</small></span></label>
-    <p class="version" id="version">Mosaïcomino 1.1.1</p>
+    <p class="version" id="version">Mosaïcomino 1.2.0</p>
     <div class="dialog-actions"><button type="button" class="secondaire" data-fermer>Fermer</button><button type="button" class="primaire" id="options-jouer">Créer cette étude</button></div>
 </dialog>
 

@@ -10,6 +10,22 @@ Ce n’est pas une variante graphique de Polyominos. Il n’y a ni grille ni cas
 les positions, les rotations, les courbes, les collisions et l’aire sont toutes
 calculées dans un plan continu.
 
+## Version 1.2.0 — Le passeport commun
+
+- ouvert depuis le hub avec un passeport, le jeu range préférences, composition
+  en cours et statistiques dans l’espace du joueur ; en mode invité, rien ne
+  change ;
+- une composition achevée donne le tampon **Logique** tout de suite (indices
+  compris) ; sinon, la vingtième tesselle posée dans la journée le donne aussi ;
+- **correction** : recharger la page en pleine partie effaçait toutes les
+  tesselles posées, car l’adresse `?jour=` relançait une composition neuve. Celle
+  qui est sauvegardée est désormais reprise quand l’adresse la désigne ;
+- **correction** : le titre passait sous les boutons de l’en-tête (29 px sur
+  iPhone 15, 77 px sur iPhone SE). Il se règle maintenant sur la place laissée
+  par les boutons, et le monogramme s’efface sur téléphone en portrait ;
+- l’adresse garde le profil du passeport ; bandeau du passeport, fichiers
+  `commun/` précachés.
+
 ## Version 1.1.1
 
 - les cibles tactiles de l'interface passent à 44 px (boutons d'en-tête,

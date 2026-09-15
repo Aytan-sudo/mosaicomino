@@ -14,7 +14,7 @@ import {
 import { preparerSon, sonPose, sonRefus, sonRotation, sonVictoire, surveillerVisibilite } from './son.js';
 import {
     chargerPreferences, chargerSession, chargerStatistiques, effacerStatistiques,
-    enregistrerPreferences, enregistrerSession, enregistrerVictoire
+    enregistrerPreferences, enregistrerSession, enregistrerVictoire, compterPosePasseport
 } from './stockage.js';
 import { THEMES, themeSuivant } from './themes.js';
 
@@ -82,9 +82,13 @@ function lireRoute() {
 
 function completerMeta(donnees) { return { ...donnees, nomNiveau: NIVEAUX[donnees.niveau].nom }; }
 
+// Le passeport ne porte que le profil : il reste dans l'adresse, sinon un
+// rechargement retomberait sur le dernier joueur choisi dans le hub.
 function synchroniserAdresse() {
     const url = new URL(location.href);
+    const profil = url.searchParams.get('profil');
     url.search = '';
+    if (profil !== null) url.searchParams.set('profil', profil);
     if (meta.dateJour) url.searchParams.set('jour', meta.dateJour);
     else {
         url.searchParams.set('seed', meta.graine);
@@ -150,11 +154,17 @@ function restaurer(session) {
 
 function initialiserPartie() {
     const route = lireRoute();
-    if (route) return demarrer(route);
     const session = chargerSession();
-    if (session?.schema === 1 && session.puzzle?.schema === 1 && NIVEAUX[session.meta?.niveau]) {
+    const valide = session?.schema === 1 && session.puzzle?.schema === 1 && NIVEAUX[session.meta?.niveau];
+    // L'adresse porte toujours le jour ou la graine de la composition en cours :
+    // la recharger n'est pas en demander une neuve. Sans ce test, un
+    // rechargement effaçait toutes les tesselles posées.
+    const memeGrille = valide && route && session.meta.graine === route.graine && session.meta.niveau === route.niveau;
+    if (route && !memeGrille) return demarrer(route);
+    if (valide) {
         try { return restaurer(session); } catch { /* repartir proprement */ }
     }
+    if (route) return demarrer(route);
     const jour = dateLocale();
     demarrer({ graine: `jour-${jour}`, niveau: NIVEAU_QUOTIDIEN, dateJour: jour, quotidien: true });
 }
@@ -174,10 +184,21 @@ function capturer() {
     historique = historique.slice(-36);
 }
 
+// Le tampon Logique du passeport : une composition achevée le donne tout de
+// suite ; sinon, la vingtième tesselle posée dans la journée. En mode invité,
+// rien ne compte.
+function noterPasseport({ pose = false, reussite = false }) {
+    const joueur = globalThis.Passeport;
+    if (!joueur?.profilId) return;
+    const poses = pose ? compterPosePasseport(joueur.jourLocal()) : 0;
+    if (poses !== null) joueur.noter('mosaicomino', poses, reussite);
+}
+
 function verifierFin() {
     if (terminee || !estTerminee(puzzle, etats)) return false;
     suspendreChrono();
     terminee = true;
+    noterPasseport({ reussite: true });
     if (!resultatEnregistre) {
         enregistrerVictoire({
             niveau: puzzle.niveau, quotidien: meta.quotidien, dateJour: meta.dateJour,
@@ -357,6 +378,7 @@ function finGlisser(evenement) {
         return refuser('Les formes ne peuvent ni se chevaucher ni dépasser.');
     }
     selection = action.id;
+    noterPasseport({ pose: true });
     valider(resultat.etats, 'Tesselle déposée.');
 }
 
@@ -366,6 +388,7 @@ function poserAu(point) {
     const candidat = aimanter(puzzle, etats, { ...etat, x: point.x, y: point.y });
     const resultat = placer(puzzle, etats, candidat, false);
     if (!resultat) return refuser('Cette forme ne tient pas à cet endroit.');
+    noterPasseport({ pose: true });
     valider(resultat.etats, 'Tesselle déposée.');
 }
 
