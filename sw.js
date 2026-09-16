@@ -1,4 +1,4 @@
-const VERSION = 'mosaicomino-1.2.0';
+const VERSION = 'mosaicomino-1.2.1';
 const COQUILLE = [
     './',
     'index.html',
