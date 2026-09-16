@@ -1,6 +1,6 @@
 {
   "name": "mosaicomino",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "private": true,
   "description": "Puzzle de pavage par formes libres, droites et incurvées, sans grille.",
   "type": "module",

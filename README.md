@@ -10,6 +10,12 @@ Ce n’est pas une variante graphique de Polyominos. Il n’y a ni grille ni cas
 les positions, les rotations, les courbes, les collisions et l’aire sont toutes
 calculées dans un plan continu.
 
+## Version 1.2.2 — Passeport 1.8.0
+
+Module commun du passeport 1.8.0 : **Maze for Adventurers** rejoint le thème
+Aventure, aux côtés de Snake. Toute la collection est désormais raccordée. Rien
+ne change dans le jeu.
+
 ## Version 1.2.1 — Passeport 1.7.0
 
 Module commun du passeport 1.7.0 : 2048 rejoint le thème Nombres, Snake ouvre le
