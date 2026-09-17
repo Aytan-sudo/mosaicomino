@@ -10,6 +10,12 @@ Ce n’est pas une variante graphique de Polyominos. Il n’y a ni grille ni cas
 les positions, les rotations, les courbes, les collisions et l’aire sont toutes
 calculées dans un plan continu.
 
+## Version 1.2.3 — Passeport 1.9.0
+
+Module commun du passeport 1.9.0 : deux jeux neufs rejoignent la collection,
+**Le compte est bon** (thème Nombres) et **La Ruche** (thème Mots). Rien ne
+change dans le jeu.
+
 ## Version 1.2.2 — Passeport 1.8.0
 
 Module commun du passeport 1.8.0 : **Maze for Adventurers** rejoint le thème
